@@ -40,12 +40,20 @@ plaintext=$(echo "$plaintext" | tr A-Z a-z | sed s/[^a-z]//g)   # Change letters
 
 # Obtain the key
 
-echo Enter key                                      # Prompt to enter the key
-echo Same restrictions apply as the message.        # Prompt with restrictions being the same as message
-read key                                            # Read user input as the key
-key=$(echo "$key" | tr A-Z a-z | sed s/[^a-z]//g)   # As with message, change letters to lowercase, remove all else
-length=${#key}                                      # Obtain the length of the sanitized key
-step=0                                              # Set the "step" of the key to 0.
+while test -z "$key"
+do
+  echo Enter key                                        # Prompt to enter the key
+  echo Same restrictions apply as the message.          # Prompt with restrictions being the same as message
+  read key                                              # Read user input as the key
+  key=$(echo "$key" | tr A-Z a-z | sed s/[^a-z]//g)     # As with message, change letters to lowercase, remove all else
+  if [[ -z "$key" ]]                                    # Check if key contains at least 1 character
+  then
+    echo "You must enter at least 1 letter as the key"
+  fi
+done
+
+length=${#key}  # Obtain the length of the sanitized key
+step=0          # Set the "step" of the key to 0.
 
 
 # Encode/decode message using key
