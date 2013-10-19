@@ -1,14 +1,15 @@
 #!/bin/bash
 # Caesar Cipher Script
 # By Anomitee
+# For usage information, check out http://git.io/nr2Ldw
 
 # Determine if performing a cipher or reversing one
 
 continue=0                          # Set continue as 0
 while [ $continue != 1 ]            # Loop whilst "continue" is not 1
 do
-  echo "Reverse a cipher?"          # Prompt if a cipher is to be reversed
-  echo "Enter 1 for yes, 0 for no"  # Prompt with required inputs
+  echo "Are you encoding or decoding?"          # Prompt if a cipher is to be reversed
+  echo "Enter 0 to encode, 1 to decode"  # Prompt with required inputs
   read -n 1 reverse                 # Read user input after 1 character is entered
   echo
   if [[ $reverse = 1 ]]             # If 1 was entered (yes):
