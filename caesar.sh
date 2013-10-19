@@ -5,26 +5,26 @@
 
 # Determine if performing a cipher or reversing one
 
-continue=0                          # Set continue as 0
-while [ $continue != 1 ]            # Loop whilst "continue" is not 1
+continue=0                # Set continue as 0
+while [ $continue != 1 ]  # Loop whilst "continue" is not 1
 do
-  echo "Are you encoding or decoding?"          # Prompt if a cipher is to be reversed
-  echo "Enter 0 to encode, 1 to decode"  # Prompt with required inputs
-  read -n 1 reverse                 # Read user input after 1 character is entered
+  echo "Are you encoding or decoding?"    # Prompt if encoding or decoding
+  echo "Enter 0 to encode, 1 to decode"   # Prompt with required inputs
+  read -n 1 reverse                       # Read user input after 1 character is entered
   echo
-  if [[ $reverse = 1 ]]             # If 1 was entered (yes):
+  if [[ $reverse = 1 ]] # If 1 was entered (yes):
   then
-    continue=1                      # Set "continue" to 1 (breaking the loop)
-    op="-"                          # Set the operation performed as subtraction (reverse-cipher)
+    continue=1          # Set "continue" to 1 (breaking the loop)
+    op="-"              # Set the operation performed as subtraction (decode)
   fi
-  if [[ $reverse = 0 ]]             # If 0 was entered (no):
+  if [[ $reverse = 0 ]] # If 0 was entered (no):
   then
-    continue=1                      # Break the loop by setting continue to 1
-    op="+"
+    continue=1          # Break the loop by setting continue to 1
+    op="+"              # Set the operation performed as addition (encode)
   fi
-  if [[ $continue = 0 ]]            # Check if "continue" is still 0 (if 1 or 0 was not entered)
+  if [[ $continue = 0 ]]        # Check if "continue" is still 0 (if 1 or 0 was not entered)
   then
-    echo "Please enter 1 or 0"      # Prompt with possible inputs if "continue" is not 1
+    echo "Please enter 1 or 0"  # Prompt with possible inputs if "continue" is not 1
   fi
 done
 
