@@ -6,4 +6,4 @@ Miscellaneous scripts written in BASH.
 Scripts
 -------
 
-* [Caesar Cipher](caesar.sh)
+* [Viginère Cipher](Viginère.sh)
