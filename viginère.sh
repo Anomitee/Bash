@@ -1,7 +1,6 @@
 #!/bin/bash
-# Caesar Cipher Script
+# Viginère Cipher Script
 # By Anomitee
-# For usage information, check out http://git.io/nr2Ldw
 
 # Determine if performing a cipher or reversing one
 
