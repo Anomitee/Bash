@@ -3,8 +3,8 @@
 # By Anomitee
 # For more information, visit http://git.io/k0aGvw
 
-
 op="+"  # Set default operation to addition (this is used to encode a message)
+
 
 # "Tests"
 
