@@ -13,34 +13,20 @@ do
   case $flags in
   e)  continue=1;;          # Skips prompting for encoding/decoding. Handy if not piping your message in
   d)  continue=1; op="-";;  # Makes the operation subtraction (used to decode). Skips encode/decode prompt
-  k)  key=$(echo "$OPTARG" | tr A-Z a-z | sed s/[^a-z]//g);;  # Argument is taken as key. Skip prompt.
-  esac
+  k)  key=$(echo "$OPTARG" | tr A-Z a-z | sed s/[^a-z]//g); option=1;;  # Argument is taken as key.
+  esac                      # "option" will be used to determine if -k was used and for "error" messages
 done
 
 read -t 0 < /dev/stdin  # Check something has been piped.
 if [[ "$?" = 0 ]]       # If so,
 then
-  continue=1            # Set "continue" to 1 and don't read for a key below
+  continue=1            # Set "continue" to 1
   pipe=1                # Set "pipe" to 1
   if [[ -z "$key" ]]
   then
     echo "-k flag with an argument containing at least 1 letter required when piping."  # "Error" message if piping
     echo "Visit http://git.io/k0aGvw for more usage information"                        # Link to wiki on GitHub
     exit 1              # Exit the script with an exit code of 1
-  fi
-fi
-
-if [ -z $key ] && [ "$continue" = 1 ] # Test for empty key if skipping prompt
-then
-  if [[ $pipe = 1 ]]                  # Check if piping input or not
-  then
-    echo "-k flag with an argument containing at least 1 letter required when piping."  # "Error" message if piping
-    echo "Visit http://git.io/k0aGvw for more usage information"                        # Link to wiki on GitHub
-    exit 1                            # Exit the script with an exit code of 1
-  else
-    echo "-k option argument requires at least 1 letter." # Message if option was set, but not piping
-    echo "You will be prompted for a key"
-    continue=0                                            # Do not skip the prompt for the key
   fi
 fi
 
@@ -86,8 +72,13 @@ plaintext=$(echo "$plaintext" | tr A-Z a-z | sed s/[^a-z]//g) # Change letters t
 
 # Obtain the key
 
-while test -z "$key"
+while test -z "$key"                                # If "key" is still empty
 do
+  if [[ "$option" = 1 ]]                            # If "option" is 1 (i.e. if -k was used)
+  then
+    echo "-k argument must have at least 1 letter"
+    echo "You will now be prompted for a key"
+  fi
   echo Enter key                                    # Prompt to enter the key
   echo Same restrictions apply as the message.      # Prompt with restrictions being the same as message
   read key                                          # Read user input as the key
