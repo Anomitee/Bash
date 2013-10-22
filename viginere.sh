@@ -1,11 +1,38 @@
 #!/bin/bash
 # Viginère Cipher Script
 # By Anomitee
+# For more information, visit http://git.io/k0aGvw
+
+op="+"  # Set default operation to addition (this is used to encode a message)
+
+
+# "Tests"
+
+while getopts dk: flags                                       # Get flags
+do
+  case $flags in
+  d)  continue=1; op="-";;                                    # -d makes the operation subtraction (used to decode)
+  k)  key=$(echo "$OPTARG" | tr A-Z a-z | sed s/[^a-z]//g);;  # argument for -k is taken as the key
+  esac
+done
+
+read -t 0 < /dev/stdin  # Check something has been piped.
+if [[ $? = 0 ]]         # If so,
+then
+  continue=1            # Set "continue" to 1 and don't read for a key below
+  pipe=1                # Set "pipe" to 1
+  if [[ -z $key ]]      # Test for a key. Since the script cannot accept piped input and keyboard input at the same
+  then                  # time, the key must be set using the -k option when piping, which was done above.
+    echo "-k flag with an argument containing at least 1 letter required when piping."  # "Error" message if no key
+    echo "Visit http://git.io/k0aGvw for more usage information"                        # Link to wiki on GitHub
+    exit 1              # Stop the script
+  fi
+fi
+
 
 # Determine if performing a cipher or reversing one
 
-continue=0                # Set continue as 0
-while [ $continue != 1 ]  # Loop whilst "continue" is not 1
+while [[ $continue != 1 ]]  # Loop whilst "continue" is not 1
 do
   echo "Are you encoding or decoding?"    # Prompt if encoding or decoding
   echo "Enter 0 to encode, 1 to decode"   # Prompt with required inputs
@@ -21,7 +48,7 @@ do
     continue=1          # Break the loop by setting continue to 1
     op="+"              # Set the operation performed as addition (encode)
   fi
-  if [[ $continue = 0 ]]        # Check if "continue" is still 0 (if 1 or 0 was not entered)
+  if [[ $continue != 1 ]]        # Check if "continue" is still 0 (if 1 or 0 was not entered)
   then
     echo "Please enter 1 or 0"  # Prompt with possible inputs if "continue" is not 1
   fi
@@ -30,22 +57,28 @@ done
 
 # Obtain message
 
-echo Enter message                                              # Prompt to enter message
-echo Case will be ignored.                                      # Prompt with restrictions
-echo Anything other than letters and space will be removed
-read plaintext                                                  # Read user input as the message
-plaintext=$(echo "$plaintext" | tr A-Z a-z | sed s/[^a-z]//g)   # Change letters to lowercase, remove all else
+if [[ $pipe = 1 ]]                                              # If piping
+then
+  read plaintext < /dev/stdin                                   # accept the piped input as the plaintext
+else
+  echo Enter message                                            # Prompt to enter message
+  echo Case will be ignored.                                    # Prompt with restrictions
+  echo Anything other than letters and space will be removed
+  read plaintext                                                # Read user input as the message
+  plaintext=$(echo "$plaintext" | tr A-Z a-z | sed s/[^a-z]//g)
+fi
+plaintext=$(echo "$plaintext" | tr A-Z a-z | sed s/[^a-z]//g) # Change letters to lowercase, remove all else
 
 
 # Obtain the key
 
 while test -z "$key"
 do
-  echo Enter key                                        # Prompt to enter the key
-  echo Same restrictions apply as the message.          # Prompt with restrictions being the same as message
-  read key                                              # Read user input as the key
-  key=$(echo "$key" | tr A-Z a-z | sed s/[^a-z]//g)     # As with message, change letters to lowercase, remove all else
-  if [[ -z "$key" ]]                                    # Check if key contains at least 1 character
+  echo Enter key                                    # Prompt to enter the key
+  echo Same restrictions apply as the message.      # Prompt with restrictions being the same as message
+  read key                                          # Read user input as the key
+  key=$(echo "$key" | tr A-Z a-z | sed s/[^a-z]//g) # As with message, change letters to lowercase, remove all else
+  if [[ -z "$key" ]]                                # Check if key contains at least 1 character
   then
     echo "You must enter at least 1 letter as the key"
   fi
@@ -57,8 +90,7 @@ step=0          # Set the "step" of the key to 0.
 
 # Encode/decode message using key
 
-# Loop whilst the length of "plaintext" is non-zero
-while test -n "$plaintext"
+while test -n "$plaintext"                    # Loop whilst the length of "plaintext" is non-zero
 do
   char=${plaintext:0:1}                       # Set "char" as the first character of "plaintext"
   loop=25                                     # Set/reset "loop" to 25
