@@ -26,6 +26,7 @@ function helpinfo {
   echo "  -e      Skip the encode/decode prompt and automatically encode"
   echo "  -d      Skip the encode/decode prompt and automatically decode"
   echo "  -k KEY  Use KEY as the key. Required if piping into stdin"
+  exit 0
 }
 
 # Set default operation as encoding
@@ -44,7 +45,7 @@ do
   e)  continue=1;;          # Skips prompting for encoding/decoding.
   d)  continue=1; op="-";;  # Makes the operation subtraction (used to decode). Skips encode/decode prompt
   h)  helpinfo;;
-  k)  key=$(clean "$OPTARGS"); option=1;; # Argument is taken as key.
+  k)  key=$(clean "$OPTARG"); option=1;; # Argument is taken as key.
   esac                      # "option" will be used to determine if -k was used and for "error" messages
 done
 
@@ -53,7 +54,7 @@ if [[ "$?" = 0 ]]       # If so,
 then
   continue=1            # Set "continue" to 1
   pipe=1                # Set "pipe" to 1
-  if [[ -z "$key" ]]    # Check if Cleaned up key contains at least 1 letter
+  if [[ -z "$key" ]]    # Check if cleaned up key contains at least 1 letter
   then
     error
     exit 1              # Exit the script with an exit code of 1
