@@ -10,4 +10,4 @@ Scripts
 
 * [Re-written Viginère Cipher](viginere2.sh)
 
-* [GitHub Forked Repository Updater](github-fork-updater.sh0
+* [GitHub Forked Repository Updater](github-fork-updater.sh)
