@@ -91,7 +91,7 @@ done
 
 if [[ "$pipe" = 1 ]]                                          # If piping
 then
-  read plaintext < /dev/stdin                                 # accept the piped input as the plaintext
+  read -u 0 plaintext                                         # accept the piped input as the plaintext
 else
   echo "Enter message"                                        # Prompt to enter message
   echo "Case will be ignored."                                # Prompt with restrictions
