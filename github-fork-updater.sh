@@ -18,3 +18,6 @@ git fetch upstream
 # Merge these changes.
 # Uncomment this line to have the script merge the changes automatically
 # git merge upstream/master
+
+# Uncomment to have the script pause before finishing
+# read -sn 1 -p 'Press any key to continue'
