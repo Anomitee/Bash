@@ -6,27 +6,40 @@
 
 rot1=eostygurkxmnfbwcijdzqhavlp
 rot2=prkyftjicxbnzdavhsegloqwum
-rot1=laiguqwvmbnrtfdkzejycospxh
+rot3=laiguqwvmbnrtfdkzejycospxh
 refl=yiwrnazltxkohpqufmdsegjcbv
+numr=3
 
-for r in rot{1..3} refl; do
-  if [[ "$((${#r}%2))" == 1 ]]; then
-    printf "$r has an odd number of characters."
+for r in $(seq $numr); do
+  rot=rot$r
+  let l$rot=$(expr length ${!rot})
+  if [[ "$(($l$r%2))" == 1 ]]; then
+    printf "$rot has an odd number of characters."
     printf "Please edit the script and fix this."
     exit 1
   fi
-  step$r=0
+  let step$rot=0
 done
 
 
 # Functions and variables
 
 cipher() {
-  step=step$1
-  mid=$((${#1}/2))
-  printf "$2" | tr "${1:${!step}}${1::${!step}}" "${1:$mid}${1::$mid}"
+  shift=step$1
+  rot=${!1}
+  mid=$((${#rot}/2))
+  printf "$2" | tr "${rot:${!shift}}${rot::${!shift}}" "${rot:$mid}${rot::$mid}"
 }
 
 turn() {
   step=$((step+1))
-  
+  for n in $(seq $numr -1 1)
+    total=$((lrot`seq -s *lrot $n -1 1`))
+    if [[ "$step" -ge "$total" ]]
+    then
+      step=$((step-total))
+      let length=lrot$n
+      let steprot$n=$(($((steprot$n+1))%lrot$n))
+    fi
+  done
+}
