@@ -1,6 +1,6 @@
 #!/bin/bash
 # String scrambler
-# Scrambles a string and 
+# Scrambles a string
 # By Anomitee
 
 # Function for easy copy-pasting into other scripts
