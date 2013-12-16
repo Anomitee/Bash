@@ -15,4 +15,5 @@ scramble() {
   string=$buffer    # Replace the string with its scrambled version
   printf "$string"  # Print string (no newline for more flexibility)
 }
+
 scramble $1
