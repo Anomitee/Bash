@@ -34,7 +34,7 @@ cipher() {
 turn() {
   step=$((step+1))
   for n in $(seq $numr -1 1); do
-    total=lrot$((seq -s '*lrot' $n -1 1))
+    total=$((lrot$(seq -s '*lrot' $n -1 1)))
     if [[ "$step" -ge "$total" ]]
     then
       step=$((step-total))
@@ -51,16 +51,19 @@ then
 else
   printf "Type message.\n"
   read message
-  printf "\n"
 fi
 
 while [[ -n "$message" ]]; do
   char=${message::1}
+  lowc=$(printf "$char" | tr [A-Z] [a-z])
+  if [[ "$char" != "$lowc" ]]; then caps=true; char=$lowc; else caps=false; fi
   for c in rot{1..3} refl rot{3..1}; do
     char=$(cipher $c "$char")
   done
+  if [[ $caps == true ]]; then char=`printf "$char" | tr [a-z] [A-Z]`; fi
   printf "$char"
   message=${message:1}
+  turn
 done
 
 printf "\n"
