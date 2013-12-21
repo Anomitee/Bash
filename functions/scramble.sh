@@ -11,7 +11,7 @@ scramble() {
     n)  opt=1; end="\n";;
     esac
   done
-  if [[ "$#" -gt "$((1+opt)) ]]; then
+  if [[ "$#" -gt "$((1+opt))" ]]; then
     printf "More than 1 argument detected.\n"
     printf "Quote spaces if you want all arguments to be read as 1\n"
     printf "Otherwise, scramble each string separately"
