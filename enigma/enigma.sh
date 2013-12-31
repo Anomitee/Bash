@@ -2,68 +2,65 @@
 # Enigma Machine-like cipher
 # By Anomitee
 
-# Define rotors and reflectors
 
-rot1=eostygurkxmnfbwcijdzqhavlp
-rot2=prkyftjicxbnzdavhsegloqwum
-rot3=laiguqwvmbnrtfdkzejycospxh
-refl=yiwrnazltxkohpqufmdsegjcbv
-numr=3
+# Define rotors, cipher sequence, patchcords
+# Do not edit manually unless you know what you're doing
+# Either run the script with the "-i" flag, or carefully read the comments
 
-for r in $(seq $numr); do
+# Rotors in the form 'rot#' where # is at least 1 digit
+# Do not repeat characters
+rot1='eostygurkxmnfbwcijdzqhavlp'
+rot2='prkyftjicxbnzdavhsegloqwum'
+rot3='laiguqwvmbnrtfdkzejycospxh'
+rot4='yiwrnazltxkohpqufmdsegjcbv'
+
+# Cipher sequence - the order that the message is passed throught the rotors
+# Use the number after "rot" to indicate the rotors and separate using spaces.
+cseq='1 2 3 4 3 2 1'
+
+# Patchcords - use pairs of characters with no repetition
+patc='afeyib'
+
+
+# Perform checks and obtain information (e.g. string lengths, midpoints etc.)
+
+rotn=`for r in "$cseq"; do echo $r; done | awk '!x[$0]++'` # Numbers of rotors used
+
+# Check that the rotors to be used actually exist
+for r in $rotn; do
   rot=rot$r
-  let l$rot=$(expr length ${!rot})
-  if [[ "$((lrot$r%2))" == 1 ]]; then
-    printf "$rot has an odd number of characters.\n"
-    printf "Please edit the script and fix this.\n"
-    exit 1
+  if [[ -z "${!rot}" ]]; then
+    printf "$rot is not defined"
+    printf "Fix this by running with the -i flag edit the script (if you know how)"
+    exit 80
   fi
-  let step$rot=0
 done
 
-
-# Functions and variables
-
-cipher() {
-  shift=step$1
-  rot=${!1}
-  mid=$((${#rot}/2))
-  printf "$2" | tr "${rot:${!shift}}${rot::${!shift}}" "${rot:$mid}${rot::$mid}"
-}
-
-turn() {
-  step=$((step+1))
-  for n in $(seq $numr -1 1); do
-    total=$((lrot$(seq -s '*lrot' $n -1 1)))
-    if [[ "$step" -ge "$total" ]]
+# Function to check for repeated characters in rotors
+rotorcheck() {
+  for n in "$@"; do
+    rot="rot$n"
+    rep=`printf "${!rot}" | sed -n '/\(.\).*\1/p'`
+    if [[ -n "$rep" ]]
     then
-      step=$((step-total))
-      let length=lrot$n
-      let steprot$n=$(($((steprot$n+1))%lrot$n))
+      printf "$rot has repeated characters."
+      printf "Run the script with the -i flag to change it or edit it manually."
+      exit 80
     fi
   done
 }
 
-read -t 0
-if [[ "$?" == 0 ]]
-then
-  read message
-else
-  printf "Type message.\n"
-  read message
-fi
+rotorcheck  # Check the rotors to be used for repetition
 
-while [[ -n "$message" ]]; do
-  char=${message::1}
-  lowc=$(printf "$char" | tr [A-Z] [a-z])
-  if [[ "$char" != "$lowc" ]]; then caps=true; char=$lowc; else caps=false; fi
-  for c in rot{1..3} refl rot{3..1}; do
-    char=$(cipher $c "$char")
-  done
-  if [[ $caps == true ]]; then char=`printf "$char" | tr [a-z] [A-Z]`; fi
-  printf "$char"
-  message=${message:1}
-  turn
-done
+patchcheck() {
+  rep=`printf "$patc" | sed -n '/\(.\).*\1/p'`
+  if [[ -n "$rep" ]]
+  then
+    printf "patc has repeated characters."
+    printf "Run the script with the -i flag to change it or edit it manually."
+    exit 80
+  fi
+}
 
-printf "\n"
+patchcheck  # Check patchcords
+
